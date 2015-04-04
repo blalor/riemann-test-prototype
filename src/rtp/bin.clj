@@ -7,15 +7,26 @@
         [riemann.time]
         [riemann.config]
         [clojure.tools.logging :refer :all]
+        
+        [rtp.sources.riemann :as riemann]
     )
 )
 
 (defn- init
     "sets up Riemann config"
     []
-    (prn "initializing")
+    
+    ;; set up servers, which generate their own metrics
+    (riemann.config/tcp-server)
+    (riemann.config/udp-server)
+    (riemann.config/ws-server)
+    (riemann.config/sse-server)
+    (riemann.config/repl-server)
+    
+    ;; connect the streams
     (riemann.config/streams
-        prn)
+        (riemann/init prn)
+    )
 )
 
 (defn -main
